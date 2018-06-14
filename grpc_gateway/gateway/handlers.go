@@ -3,7 +3,6 @@ package gateway
 import (
 	"fmt"
 	"net/http"
-	"path"
 	"strings"
 
 	"github.com/golang/glog"
@@ -11,7 +10,7 @@ import (
 	"google.golang.org/grpc/connectivity"
 )
 
-func swaggerServer(dir string) http.HandlerFunc {
+func swaggerServer(swaggerData map[string][]byte) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
 			glog.Errorf("Not Found: %s", r.URL.Path)
@@ -21,8 +20,16 @@ func swaggerServer(dir string) http.HandlerFunc {
 
 		glog.Infof("Serving %s", r.URL.Path)
 		p := strings.TrimPrefix(r.URL.Path, "/swagger/")
-		p = path.Join(dir, p)
-		http.ServeFile(w, r, p)
+
+		if val, ok := swaggerData[p]; ok {
+			w.Write(val)
+			return
+		}
+		if val, ok := swaggerData["bazel-out/darwin-fastbuild/bin/" + p]; ok {
+			w.Write(val)
+			return
+		}
+
 	}
 }
 

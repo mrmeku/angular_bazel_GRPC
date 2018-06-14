@@ -23,9 +23,9 @@ type Options struct {
 
 	// SwaggerDir is a path to a directory from which the server
 	// serves swagger specs.
-	SwaggerDir string
+	SwaggerData map[string][]byte
 
-	// Mux is a list of options to be passed to the grpc-gateway multiplexer
+	// Mux is a list of options to be passed to the grpc_gateway multiplexer
 	Mux []gwruntime.ServeMuxOption
 }
 
@@ -47,7 +47,7 @@ func Run(ctx context.Context, opts Options) error {
 	}()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/swagger/", swaggerServer(opts.SwaggerDir))
+	mux.HandleFunc("/swagger/", swaggerServer(opts.SwaggerData))
 	mux.HandleFunc("/healthz", healthzServer(conn))
 
 	gw, err := newGateway(ctx, conn, opts.Mux)

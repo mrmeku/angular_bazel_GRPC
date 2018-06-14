@@ -1,13 +1,20 @@
-package server
+package main
 
 import (
 	"context"
 	"net"
 
-	echoService "angular_bazel_example/api/echo_service"
+	additionService "angular_bazel_GRPC/addition_service"
 
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
+
+	"flag"
+)
+
+var (
+	addr    = flag.String("addr", ":9090", "endpoint of the gRPC service")
+	network = flag.String("network", "tcp", "a valid network type which is consistent to -addr")
 )
 
 // Run starts the example gRPC service.
@@ -24,11 +31,21 @@ func Run(ctx context.Context, network, address string) error {
 	}()
 
 	s := grpc.NewServer()
-	echoService.RegisterEchoServiceServer(s, newEchoServer())
+	additionService.RegisterAdditionServiceServer(s, newAdditionServer())
 
 	go func() {
 		defer s.GracefulStop()
 		<-ctx.Done()
 	}()
 	return s.Serve(l)
+}
+
+func main() {
+	flag.Parse()
+	defer glog.Flush()
+
+	ctx := context.Background()
+	if err := Run(ctx, *network, *addr); err != nil {
+		glog.Fatal(err)
+	}
 }

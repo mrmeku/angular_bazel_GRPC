@@ -1,4 +1,13 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
 package(default_visibility = ["//visibility:public"])
+
+# gazelle:exclude dist
+# gazelle:exclude node_modules
+gazelle(
+    name = "gazelle",
+    prefix = "angular_bazel_GRPC",
+)
 
 alias(
     name = "install",
