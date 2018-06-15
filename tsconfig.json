@@ -10,12 +10,12 @@
     "paths": {
       "angular_bazel_GRPC/*": [
         "./*",
-        "dist/bin/*"
+        "bazel-bin/*"
       ],
     }
   },
   "include": [
     "src/**/*.ts",
-    "dist/bin/**/*.ts"
+    "bazel-bin/**/*.ts"
   ]
 }
