@@ -3,6 +3,7 @@ package gateway
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/golang/glog"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -45,7 +46,6 @@ func Run(ctx context.Context, opts Options) error {
 	}()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/swagger/", swaggerServer(opts.StaticData))
 	mux.HandleFunc("/healthz", healthzServer(conn))
 	gw, err := newGateway(ctx, conn, opts.Mux)
 	if err != nil {
@@ -53,15 +53,12 @@ func Run(ctx context.Context, opts Options) error {
 	}
 	mux.Handle("/v1/", gw)
 
-	mux.HandleFunc("/zone.min.js", func(w http.ResponseWriter, r *http.Request) {
-		if val, ok := opts.StaticData["zone.min.js"]; ok {
-			w.Write(val)
-			return
-		}
-	})
-
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if val, ok := opts.StaticData["index.html"]; ok {
+		fileName := strings.TrimPrefix(r.URL.Path, "/")
+		if fileName == "" {
+			fileName = "index.html"
+		}
+		if val, ok := opts.StaticData[fileName]; ok {
 			w.Write(val)
 			return
 		}

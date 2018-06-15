@@ -10,25 +10,6 @@ import (
 	"google.golang.org/grpc/connectivity"
 )
 
-func swaggerServer(swaggerData map[string][]byte) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
-			glog.Errorf("Not Found: %s", r.URL.Path)
-			http.NotFound(w, r)
-			return
-		}
-
-		glog.Infof("Serving %s", r.URL.Path)
-		p := strings.TrimPrefix(r.URL.Path, "/swagger/")
-
-		if val, ok := swaggerData[p]; ok {
-			w.Write(val)
-			return
-		}
-
-	}
-}
-
 // allowCORS allows Cross Origin Resoruce Sharing from any origin.
 // Don't do this without consideration in production systems.
 func allowCORS(h http.Handler) http.Handler {

@@ -3,10 +3,9 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
-        "doc.go",
         "gateway.go",
         "handlers.go",
-        "main.go",
+        "run.go",
     ],
     importpath = "angular_bazel_GRPC/grpc_gateway/gateway",
     visibility = ["//visibility:public"],
