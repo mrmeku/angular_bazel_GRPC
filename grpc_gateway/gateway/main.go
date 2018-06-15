@@ -47,13 +47,11 @@ func Run(ctx context.Context, opts Options) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/swagger/", swaggerServer(opts.StaticData))
 	mux.HandleFunc("/healthz", healthzServer(conn))
-
-	mux.HandleFunc("/index.html", func(w http.ResponseWriter, r *http.Request) {
-		if val, ok := opts.StaticData["index.html"]; ok {
-			w.Write(val)
-			return
-		}
-	})
+	gw, err := newGateway(ctx, conn, opts.Mux)
+	if err != nil {
+		return err
+	}
+	mux.Handle("/v1/", gw)
 
 	mux.HandleFunc("/zone.min.js", func(w http.ResponseWriter, r *http.Request) {
 		if val, ok := opts.StaticData["zone.min.js"]; ok {
@@ -62,11 +60,12 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	})
 
-	gw, err := newGateway(ctx, conn, opts.Mux)
-	if err != nil {
-		return err
-	}
-	mux.Handle("/", gw)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if val, ok := opts.StaticData["index.html"]; ok {
+			w.Write(val)
+			return
+		}
+	})
 
 	s := &http.Server{
 		Addr:    opts.Addr,
