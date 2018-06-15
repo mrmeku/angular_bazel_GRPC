@@ -8,13 +8,14 @@ import (
 	"context"
 	"flag"
 
-	"github.com/golang/glog"
 	"angular_bazel_GRPC/grpc_gateway/gateway"
+
+	"github.com/golang/glog"
 )
 
 var (
-	endpoint   = flag.String("endpoint", "localhost:9090", "endpoint of the gRPC service")
-	network    = flag.String("network", "tcp", `one of "tcp" or "unix". Must be consistent to -endpoint`)
+	endpoint = flag.String("endpoint", "localhost:9090", "endpoint of the gRPC service")
+	network  = flag.String("network", "tcp", `one of "tcp" or "unix". Must be consistent to -endpoint`)
 )
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
 			Network: *network,
 			Addr:    *endpoint,
 		},
-		SwaggerData: Data,
+		StaticData: Data,
 	}
 	if err := gateway.Run(ctx, opts); err != nil {
 		glog.Fatal(err)

@@ -1,8 +1,12 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_embed_data")
 
 go_embed_data(
-    name = "swagger",
-    srcs = ["//addition_service:protoc_gen_swagger"],
+    name = "static",
+    srcs = [
+        "index.html",
+        "//:node_modules/zone.js/dist/zone.min.js",
+        "//addition_service:protoc_gen_swagger",
+    ],
     flatten = True,
     package = "main",
 )
@@ -11,7 +15,7 @@ go_library(
     name = "go_default_library",
     srcs = [
         "main.go",
-        ":swagger",
+        ":static",
     ],
     importpath = "angular_bazel_GRPC/grpc_gateway",
     visibility = ["//visibility:private"],

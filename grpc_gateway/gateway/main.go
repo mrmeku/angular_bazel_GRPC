@@ -21,9 +21,7 @@ type Options struct {
 	// GRPCServer defines an endpoint of a gRPC service
 	GRPCServer Endpoint
 
-	// SwaggerDir is a path to a directory from which the server
-	// serves swagger specs.
-	SwaggerData map[string][]byte
+	StaticData map[string][]byte
 
 	// Mux is a list of options to be passed to the grpc_gateway multiplexer
 	Mux []gwruntime.ServeMuxOption
@@ -47,8 +45,22 @@ func Run(ctx context.Context, opts Options) error {
 	}()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/swagger/", swaggerServer(opts.SwaggerData))
+	mux.HandleFunc("/swagger/", swaggerServer(opts.StaticData))
 	mux.HandleFunc("/healthz", healthzServer(conn))
+
+	mux.HandleFunc("/index.html", func(w http.ResponseWriter, r *http.Request) {
+		if val, ok := opts.StaticData["index.html"]; ok {
+			w.Write(val)
+			return
+		}
+	})
+
+	mux.HandleFunc("/zone.min.js", func(w http.ResponseWriter, r *http.Request) {
+		if val, ok := opts.StaticData["zone.min.js"]; ok {
+			w.Write(val)
+			return
+		}
+	})
 
 	gw, err := newGateway(ctx, conn, opts.Mux)
 	if err != nil {

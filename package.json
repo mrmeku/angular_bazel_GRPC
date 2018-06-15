@@ -11,6 +11,7 @@
     "@angular/platform-browser": "6.0.4",
     "@angular/router": "6.0.4",
     "@angular/upgrade": "^6.0.4",
+    "concurrently": "^3.5.1",
     "rxjs": "6.2.0",
     "zone.js": "0.8.26"
   },
@@ -26,10 +27,12 @@
   },
   "scripts": {
     "postinstall": "ngc -p postinstall.tsconfig.json",
+    "start": "concurrently \"./bazel-run.sh //src:devserver\" \"./bazel-run.sh //grpc_gateway\" \"./bazel-run.sh //addition_service/server\"",
+    "start-watch": "concurrently \"ibazel run //src:devserver\" \"ibazel run //grpc_gateway\" \"ibazel run //addition_service/server\"",
     "serve": "ibazel run //src:devserver",
     "prebuildifier": "bazel build @com_github_bazelbuild_buildtools//buildifier",
     "buildifier": "find . -type f \\( -name BUILD -or -name BUILD.bazel \\) ! -path \"./node_modules/*\" | xargs $(bazel info bazel-bin)/external/com_github_bazelbuild_buildtools/buildifier/*/buildifier",
-    "format": "git-clang-format",
-    "precommit": "check-clang-format \"yarn format\""
+    "format": "git-clang-format && gofmt -w -l .",
+    "precommit": "check-clang-format \"yarn format\" && test -z $(gofmt -l .)"
   }
 }

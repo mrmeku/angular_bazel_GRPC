@@ -5,6 +5,17 @@
       "es6",
       "es2016",
     ],
-    "experimentalDecorators": true
-  }
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "angular_bazel_GRPC/*": [
+        "./*",
+        "dist/bin/*"
+      ],
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "dist/bin/**/*.ts"
+  ]
 }

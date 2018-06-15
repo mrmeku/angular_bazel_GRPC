@@ -25,10 +25,6 @@ func swaggerServer(swaggerData map[string][]byte) http.HandlerFunc {
 			w.Write(val)
 			return
 		}
-		if val, ok := swaggerData["bazel-out/darwin-fastbuild/bin/" + p]; ok {
-			w.Write(val)
-			return
-		}
 
 	}
 }

@@ -18,8 +18,14 @@ func newAdditionServer() additionService.AdditionServiceServer {
 
 func (s *additionServer) Sum(ctx context.Context, msg *additionService.SumRequest) (*additionService.SumResponse, error) {
 	glog.Info(msg)
-	response := &additionService.SumResponse {
-		Sum: 0,
+	sum := int32(0)
+
+	for i := range msg.Integers {
+		sum += msg.Integers[i]
+	}
+
+	response := &additionService.SumResponse{
+		Sum: sum,
 	}
 	return response, nil
 }

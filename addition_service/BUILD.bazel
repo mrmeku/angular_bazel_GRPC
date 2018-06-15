@@ -32,6 +32,7 @@ swagger_gen(
         "configuration.ts",
         "encoder.ts",
         "index.ts",
+        "model/additionServiceSumRequest.ts",
         "model/additionServiceSumResponse.ts",
         "model/models.ts",
         "variables.ts",

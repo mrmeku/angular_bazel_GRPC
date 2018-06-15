@@ -6,17 +6,18 @@ package angular_bazel_GRPC.addition_service;
 import "google/api/annotations.proto";
 
 message SumRequest {
-  repeated int64 integers = 1;
+  repeated int32 integers = 1;
 }
 
 message SumResponse {
-  int64 sum = 1;
+  int32 sum = 1;
 }
 
 service AdditionService {
   rpc Sum(SumRequest) returns (SumResponse) {
     option (google.api.http) = {
-      post: "/v1/addition_service/sum"
+      post: "/v1/addition_service/sum",
+      body: "*"
     };
   }
 }
