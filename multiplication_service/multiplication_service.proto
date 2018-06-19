@@ -1,0 +1,24 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "multiplication_service";
+
+package angular_bazel_GRPC.multiplication_service;
+
+import "google/api/annotations.proto";
+
+message ProductRequest {
+  repeated int32 integers = 1;
+}
+
+message ProductResponse {
+  int32 product = 1;
+}
+
+service MultiplicationService {
+  rpc Product(ProductRequest) returns (ProductResponse) {
+    option (google.api.http) = {
+      post: "/v1/multiplication_service/product",
+      body: "*"
+    };
+  }
+}

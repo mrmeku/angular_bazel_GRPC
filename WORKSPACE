@@ -66,6 +66,18 @@ http_archive(
 )
 
 # Rules for producing a GRPC gateway and translating protocol buffers to swagger definitions
+http_archive(
+    name = "io_grpc_grpc_java",
+    sha256 = "f900380a5477bca95ecd924ab18e79e588014f9c7aba0cadc21db19d540c20af",
+    strip_prefix = "grpc-java-1.13.0",
+    url = "https://github.com/grpc/grpc-java/archive/v1.13.0.tar.gz",
+)
+
+# Java GRPC
+load("@io_grpc_grpc_java//:repositories.bzl", "grpc_java_repositories")
+
+grpc_java_repositories()
+
 grpc_gateway_version = "739cd2db2d2fb68c640b39110c364a2ade7ef53b"
 
 http_archive(

@@ -1,0 +1,56 @@
+load("@grpc_ecosystem_grpc_gateway//protoc-gen-swagger:defs.bzl", "protoc_gen_swagger")
+load("//:swagger_gen.bzl", "swagger_gen")
+load("@angular//:index.bzl", "ng_module")
+load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "multiplication_service_proto",
+    srcs = ["multiplication_service.proto"],
+    deps = [
+        "@com_github_googleapis_googleapis//google/api:api_proto",
+    ],
+)
+
+java_proto_library(
+    name = "multiplication_service_java_proto",
+    deps = [":multiplication_service_proto"],
+)
+
+java_grpc_library(
+    name = "multiplication_service_java_grpc",
+    srcs = [":multiplication_service_proto"],
+    deps = [":multiplication_service_java_proto"],
+)
+
+protoc_gen_swagger(
+    name = "protoc_gen_swagger",
+    proto = ":multiplication_service_proto",
+)
+
+swagger_gen(
+    name = "swagger_gen",
+    outs = [
+        "api.module.ts",
+        "api/api.ts",
+        "api/multiplicationService.service.ts",
+        "configuration.ts",
+        "encoder.ts",
+        "index.ts",
+        "model/models.ts",
+        "model/multiplicationServiceProductRequest.ts",
+        "model/multiplicationServiceProductResponse.ts",
+        "variables.ts",
+    ],
+    additional_properties = "ngVersion=6",
+    language = "typescript-angular",
+    spec = ":protoc_gen_swagger",
+)
+
+ng_module(
+    name = "ng_module",
+    srcs = [":swagger_gen"],
+    tsconfig = "//:tsconfig.json",
+    deps = ["@rxjs"],
+)

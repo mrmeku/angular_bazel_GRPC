@@ -1,0 +1,12 @@
+java_binary(
+    name = "server",
+    srcs = ["MultiplicationServer.java"],
+    main_class = "angular_bazel_grpc.multiplication_server.MultiplicationServer",
+    deps = [
+        "//multiplication_service:multiplication_service_java_grpc",
+        "//multiplication_service:multiplication_service_java_proto",
+        "@io_grpc_grpc_java//core",
+        "@io_grpc_grpc_java//netty",
+        "@io_grpc_grpc_java//stub",
+    ],
+)
