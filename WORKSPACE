@@ -94,6 +94,12 @@ http_jar(
     url = "https://oss.sonatype.org/content/repositories/snapshots/io/swagger/swagger-codegen-cli/2.4.0-SNAPSHOT/swagger-codegen-cli-2.4.0-20180611.162651-269.jar",
 )
 
+http_jar(
+    name = "google_java_format",
+    sha256 = "73faf7c9b95bffd72933fa24f23760a6b1d18499151cb39a81cda591ceb7a5f4",
+    url = "https://github.com/google/google-java-format/releases/download/google-java-format-1.6/google-java-format-1.6-all-deps.jar",
+)
+
 ####################################
 # Tell Bazel about some workspaces that were installed from npm.
 

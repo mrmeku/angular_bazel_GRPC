@@ -32,7 +32,8 @@
     "serve": "ibazel run //src:devserver",
     "prebuildifier": "bazel build @com_github_bazelbuild_buildtools//buildifier",
     "buildifier": "find . -type f \\( -name BUILD -or -name BUILD.bazel \\) ! -path \"./node_modules/*\" | xargs $(bazel info bazel-bin)/external/com_github_bazelbuild_buildtools/buildifier/*/buildifier",
-    "format": "git-clang-format && gofmt -w -l .",
+    "google-java-format": "find . -type f \\( -name *.java \\) ! -path \"./node_modules/*\" | xargs google-java-format --replace",
+    "format": "git-clang-format && gofmt -w -l . && npm run google-java-format",
     "precommit": "check-clang-format \"yarn format\" && test -z $(gofmt -l .)"
   }
 }

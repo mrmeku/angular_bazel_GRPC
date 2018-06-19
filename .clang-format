@@ -3,8 +3,7 @@ BasedOnStyle:    Google
 ColumnLimit:     100
 ---
 Language:        Java
-BasedOnStyle:    Google
-ColumnLimit:     120
+DisableFormat:   true
 ---
 Language:        Proto
 BasedOnStyle:    Google

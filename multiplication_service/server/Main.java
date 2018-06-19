@@ -26,17 +26,20 @@ public class Main {
 
   public static void main(String[] args) throws IOException, InterruptedException {
     int port = 9091;
-    final Server server = ServerBuilder.forPort(port).addService(new MultiplicationServiceImpl()).build().start();
+    final Server server =
+        ServerBuilder.forPort(port).addService(new MultiplicationServiceImpl()).build().start();
     logger.info("Server started, listening on " + port);
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        // Use stderr here since the logger may have been reset by its JVM shutdown hook.
-        System.err.println("*** shutting down gRPC server since JVM is shutting down");
-        server.shutdown();
-        System.err.println("*** server shut down");
-      }
-    });
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread() {
+              @Override
+              public void run() {
+                // Use stderr here since the logger may have been reset by its JVM shutdown hook.
+                System.err.println("*** shutting down gRPC server since JVM is shutting down");
+                server.shutdown();
+                System.err.println("*** server shut down");
+              }
+            });
     server.awaitTermination();
   }
 }
