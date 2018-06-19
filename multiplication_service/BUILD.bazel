@@ -1,3 +1,5 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@grpc_ecosystem_grpc_gateway//protoc-gen-swagger:defs.bzl", "protoc_gen_swagger")
 load("//:swagger_gen.bzl", "swagger_gen")
 load("@angular//:index.bzl", "ng_module")
@@ -53,4 +55,24 @@ ng_module(
     srcs = [":swagger_gen"],
     tsconfig = "//:tsconfig.json",
     deps = ["@rxjs"],
+)
+
+go_proto_library(
+    name = "go_proto_library",
+    compilers = [
+        "@io_bazel_rules_go//proto:go_grpc",
+        "@grpc_ecosystem_grpc_gateway//protoc-gen-grpc-gateway:go_gen_grpc_gateway",
+    ],
+    importpath = "angular_bazel_GRPC/multiplication_service",
+    proto = ":multiplication_service_proto",
+    deps = [
+        "@com_github_googleapis_googleapis//google/api:go_default_library",
+        "@grpc_ecosystem_grpc_gateway//protoc-gen-swagger/options:go_default_library",
+    ],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":go_proto_library"],
+    importpath = "angular_bazel_GRPC/multiplication_service",
 )

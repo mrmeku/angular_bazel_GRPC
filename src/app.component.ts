@@ -1,9 +1,15 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {AdditionServiceService, AdditionServiceSumRequest} from 'angular_bazel_GRPC/addition_service/swagger_gen';
+import {MultiplicationServiceProductRequest, MultiplicationServiceService} from 'angular_bazel_GRPC/multiplication_service/swagger_gen';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-const request: AdditionServiceSumRequest = {
+const sumRequest: AdditionServiceSumRequest = {
+  integers: [1, 2, 3],
+};
+
+const productRequest: MultiplicationServiceProductRequest = {
   integers: [1, 2, 3],
 };
 
@@ -13,7 +19,14 @@ const request: AdditionServiceSumRequest = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  sum$: Observable<number> = this.additionService.sum(request).pipe(map(response => response.sum));
+  readonly sum$: Observable<number> =
+      this.additionService.sum(sumRequest).pipe(map(response => response.sum));
 
-  constructor(private readonly additionService: AdditionServiceService) {}
+  readonly product$: Observable<number> =
+      this.multiplicationService.product(productRequest).pipe(map(response => response.product));
+
+  constructor(
+      private readonly additionService: AdditionServiceService,
+      private readonly multiplicationService: MultiplicationServiceService,
+  ) {}
 }

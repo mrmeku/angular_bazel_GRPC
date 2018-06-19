@@ -19,8 +19,8 @@ type Options struct {
 	// Addr is the address to listen
 	Addr string
 
-	// GRPCServer defines an endpoint of a gRPC service
-	GRPCServer Endpoint
+	AdditionServer       Endpoint
+	MultiplicationServer Endpoint
 
 	StaticData map[string][]byte
 
@@ -34,24 +34,38 @@ func Run(ctx context.Context, opts Options) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := dial(ctx, opts.GRPCServer.Network, opts.GRPCServer.Addr)
-	if err != nil {
-		return err
+	additionServerConn, additionServerErr := dial(ctx, opts.AdditionServer.Network, opts.AdditionServer.Addr)
+	if additionServerErr != nil {
+		return additionServerErr
 	}
+
+	multiplicationServerConn, multiplicationServerErr := dial(ctx, opts.MultiplicationServer.Network, opts.MultiplicationServer.Addr)
+	if multiplicationServerErr != nil {
+		return multiplicationServerErr
+	}
+
 	go func() {
 		<-ctx.Done()
-		if err := conn.Close(); err != nil {
-			glog.Errorf("Failed to close a client connection to the gRPC server: %v", err)
+		if err := additionServerConn.Close(); err != nil {
+			glog.Errorf("Failed to close a client connection to the Addition server: %v", err)
+		}
+		if err := multiplicationServerConn.Close(); err != nil {
+			glog.Errorf("Failed to close a client connection to the Multiplication server: %v", err)
 		}
 	}()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", healthzServer(conn))
-	gw, err := newGateway(ctx, conn, opts.Mux)
-	if err != nil {
-		return err
+	additionGw, additionGwErr := newGateway(ctx, additionServerConn, opts.Mux)
+	if additionGwErr != nil {
+		return additionGwErr
 	}
-	mux.Handle("/v1/", gw)
+	multiplicationGw, multiplicationGwErr := newGateway(ctx, multiplicationServerConn, opts.Mux)
+	if multiplicationGwErr != nil {
+		return multiplicationGwErr
+	}
+
+	mux.Handle("/v1/addition_service/", additionGw)
+	mux.Handle("/v1/multiplication_service/", multiplicationGw)
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fileName := strings.TrimPrefix(r.URL.Path, "/")

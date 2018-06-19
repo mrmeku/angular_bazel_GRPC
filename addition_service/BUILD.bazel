@@ -3,11 +3,12 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@grpc_ecosystem_grpc_gateway//protoc-gen-swagger:defs.bzl", "protoc_gen_swagger")
 load("//:swagger_gen.bzl", "swagger_gen")
 load("@angular//:index.bzl", "ng_module")
+load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
 
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
-    name = "addition_server_proto",
+    name = "addition_service_proto",
     srcs = ["addition_service.proto"],
     deps = [
         "@com_github_googleapis_googleapis//google/api:api_proto",
@@ -18,9 +19,20 @@ proto_library(
     ],
 )
 
+java_proto_library(
+    name = "addition_service_java_proto",
+    deps = [":addition_service_proto"],
+)
+
+java_grpc_library(
+    name = "addition_service_java_grpc",
+    srcs = [":addition_service_proto"],
+    deps = [":addition_service_java_proto"],
+)
+
 protoc_gen_swagger(
     name = "protoc_gen_swagger",
-    proto = ":addition_server_proto",
+    proto = ":addition_service_proto",
 )
 
 swagger_gen(
@@ -56,7 +68,7 @@ go_proto_library(
         "@grpc_ecosystem_grpc_gateway//protoc-gen-grpc-gateway:go_gen_grpc_gateway",
     ],
     importpath = "angular_bazel_GRPC/addition_service",
-    proto = ":addition_server_proto",
+    proto = ":addition_service_proto",
     deps = [
         "@com_github_googleapis_googleapis//google/api:go_default_library",
         "@grpc_ecosystem_grpc_gateway//protoc-gen-swagger/options:go_default_library",

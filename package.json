@@ -27,7 +27,7 @@
   },
   "scripts": {
     "postinstall": "ngc -p postinstall.tsconfig.json",
-    "start": "concurrently \"./bazel-run.sh //src:devserver\" \"./bazel-run.sh //grpc_gateway\" \"./bazel-run.sh //addition_service/server\"",
+    "start": "concurrently \"./bazel-run.sh //src:devserver\" \"./bazel-run.sh //grpc_gateway\" \"./bazel-run.sh //addition_service/server\" \"./bazel-run.sh //multiplication_service/server\"",
     "start-watch": "concurrently \"ibazel run //src:devserver\" \"ibazel run //grpc_gateway\" \"ibazel run //addition_service/server\"",
     "serve": "ibazel run //src:devserver",
     "prebuildifier": "bazel build @com_github_bazelbuild_buildtools//buildifier",
