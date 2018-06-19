@@ -12,11 +12,6 @@ import (
 	"github.com/golang/glog"
 )
 
-var (
-	endpoint = flag.String("endpoint", "localhost:9090", "endpoint of the gRPC service")
-	network  = flag.String("network", "tcp", `one of "tcp" or "unix". Must be consistent to -endpoint`)
-)
-
 func main() {
 	flag.Parse()
 	defer glog.Flush()
@@ -24,9 +19,13 @@ func main() {
 	ctx := context.Background()
 	opts := gateway.Options{
 		Addr: ":8080",
-		GRPCServer: gateway.Endpoint{
-			Network: *network,
-			Addr:    *endpoint,
+		AdditionServer: gateway.Endpoint{
+			Network: "tcp",
+			Addr:    "localhost:9090",
+		},
+		MultiplicationServer: gateway.Endpoint{
+			Network: "tcp",
+			Addr:    "localhost:9091",
 		},
 		StaticData: Data,
 	}

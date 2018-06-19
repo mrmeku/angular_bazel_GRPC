@@ -1,5 +1,7 @@
 syntax = "proto3";
 option go_package = "addition_server";
+option java_multiple_files = true;
+option java_package = "addition_service";
 
 package angular_bazel_GRPC.addition_service;
 

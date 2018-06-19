@@ -6,6 +6,7 @@ go_embed_data(
         "index.html",
         "//:node_modules/zone.js/dist/zone.min.js",
         "//addition_service:protoc_gen_swagger",
+        "//multiplication_service:protoc_gen_swagger",
     ],
     flatten = True,
     package = "main",

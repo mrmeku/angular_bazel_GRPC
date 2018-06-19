@@ -8,45 +8,41 @@ load("@io_grpc_grpc_java//:java_grpc_library.bzl", "java_grpc_library")
 package(default_visibility = ["//visibility:public"])
 
 proto_library(
-    name = "addition_service_proto",
-    srcs = ["addition_service.proto"],
+    name = "multiplication_service_proto",
+    srcs = ["multiplication_service.proto"],
     deps = [
         "@com_github_googleapis_googleapis//google/api:api_proto",
-        "@com_google_protobuf//:duration_proto",
-        "@com_google_protobuf//:empty_proto",
-        "@com_google_protobuf//:timestamp_proto",
-        "@com_google_protobuf//:wrappers_proto",
     ],
 )
 
 java_proto_library(
-    name = "addition_service_java_proto",
-    deps = [":addition_service_proto"],
+    name = "multiplication_service_java_proto",
+    deps = [":multiplication_service_proto"],
 )
 
 java_grpc_library(
-    name = "addition_service_java_grpc",
-    srcs = [":addition_service_proto"],
-    deps = [":addition_service_java_proto"],
+    name = "multiplication_service_java_grpc",
+    srcs = [":multiplication_service_proto"],
+    deps = [":multiplication_service_java_proto"],
 )
 
 protoc_gen_swagger(
     name = "protoc_gen_swagger",
-    proto = ":addition_service_proto",
+    proto = ":multiplication_service_proto",
 )
 
 swagger_gen(
     name = "swagger_gen",
     outs = [
         "api.module.ts",
-        "api/additionService.service.ts",
         "api/api.ts",
+        "api/multiplicationService.service.ts",
         "configuration.ts",
         "encoder.ts",
         "index.ts",
-        "model/additionServiceSumRequest.ts",
-        "model/additionServiceSumResponse.ts",
         "model/models.ts",
+        "model/multiplicationServiceProductRequest.ts",
+        "model/multiplicationServiceProductResponse.ts",
         "variables.ts",
     ],
     additional_properties = "ngVersion=6",
@@ -67,8 +63,8 @@ go_proto_library(
         "@io_bazel_rules_go//proto:go_grpc",
         "@grpc_ecosystem_grpc_gateway//protoc-gen-grpc-gateway:go_gen_grpc_gateway",
     ],
-    importpath = "angular_bazel_GRPC/addition_service",
-    proto = ":addition_service_proto",
+    importpath = "angular_bazel_GRPC/multiplication_service",
+    proto = ":multiplication_service_proto",
     deps = [
         "@com_github_googleapis_googleapis//google/api:go_default_library",
         "@grpc_ecosystem_grpc_gateway//protoc-gen-swagger/options:go_default_library",
@@ -78,5 +74,5 @@ go_proto_library(
 go_library(
     name = "go_default_library",
     embed = [":go_proto_library"],
-    importpath = "angular_bazel_GRPC/addition_service",
+    importpath = "angular_bazel_GRPC/multiplication_service",
 )

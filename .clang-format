@@ -4,6 +4,7 @@ ColumnLimit:     100
 ---
 Language:        Java
 BasedOnStyle:    Google
+ColumnLimit:     120
 ---
 Language:        Proto
 BasedOnStyle:    Google

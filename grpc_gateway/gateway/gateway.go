@@ -8,6 +8,7 @@ import (
 	"time"
 
 	addition_service "angular_bazel_GRPC/addition_service"
+	multiplication_service "angular_bazel_GRPC/multiplication_service"
 
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
@@ -20,6 +21,7 @@ func newGateway(ctx context.Context, conn *grpc.ClientConn, opts []gwruntime.Ser
 
 	for _, f := range []func(context.Context, *gwruntime.ServeMux, *grpc.ClientConn) error{
 		addition_service.RegisterAdditionServiceHandler,
+		multiplication_service.RegisterMultiplicationServiceHandler,
 	} {
 		if err := f(ctx, mux, conn); err != nil {
 			return nil, err

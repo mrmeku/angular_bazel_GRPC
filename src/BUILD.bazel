@@ -10,6 +10,7 @@ ng_module(
     ],
     deps = [
         "//addition_service:ng_module",
+        "//multiplication_service:ng_module",
         "@rxjs",
     ],
 )
