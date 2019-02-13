@@ -1,0 +1,25 @@
+syntax = "proto3";
+option go_package = "addition_server";
+option java_multiple_files = true;
+option java_package = "addition_service";
+
+package angular_bazel_GRPC.addition_service;
+
+import "google/api/annotations.proto";
+
+message SumRequest {
+  repeated int32 integers = 1;
+}
+
+message SumResponse {
+  int32 sum = 1;
+}
+
+service AdditionService {
+  rpc Sum(SumRequest) returns (SumResponse) {
+    option (google.api.http) = {
+      post: "/v1/addition_service/sum",
+      body: "*"
+    };
+  }
+}

@@ -1,0 +1,44 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+load("@grpc_ecosystem_grpc_gateway//protoc-gen-swagger:defs.bzl", "protoc_gen_swagger")
+load("//:swagger_gen.bzl", "swagger_gen")
+load("@angular//:index.bzl", "ng_module")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "addition_service_proto",
+    srcs = ["addition_service.proto"],
+    deps = [
+
+        "@go_googleapis//google/api:annotations_proto",
+        "@com_google_protobuf//:duration_proto",
+        "@com_google_protobuf//:empty_proto",
+        "@com_google_protobuf//:timestamp_proto",
+        "@com_google_protobuf//:wrappers_proto",
+    ],
+)
+
+protoc_gen_swagger(
+    name = "protoc_gen_swagger",
+    proto = ":addition_service_proto",
+)
+
+swagger_gen(
+    name = "swagger_gen",
+    outs = [
+        "api.module.ts",
+        "api/additionService.service.ts",
+        "api/api.ts",
+        "configuration.ts",
+        "encoder.ts",
+        "index.ts",
+        "model/additionServiceSumRequest.ts",
+        "model/additionServiceSumResponse.ts",
+        "model/models.ts",
+        "variables.ts",
+    ],
+    additional_properties = "ngVersion=6",
+    language = "typescript-angular",
+    spec = ":protoc_gen_swagger",
+)
